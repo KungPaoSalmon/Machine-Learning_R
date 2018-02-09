@@ -1,0 +1,63 @@
+---
+title: "HW 1"
+author: "Liangliang Huang"
+date: "2018/2/7"
+output:
+  pdf_document: default
+  word_document: default
+---
+Problem 3
+
+1
+```{r}
+library(quantmod)
+a<-c("XOM","WMT","VZ","V","UTX","UNH","TRV","PG","PFE","NKE","MSFT","MRK" ,"MMM","MCD","KO","JPM","JNJ","INTC","IBM","HD","GS","GE","DWDP","DIS","CVX","CSCO","CAT","BA","AXP","AAPL")
+data<-NULL
+for (i in a){
+  data<-cbind(data,getSymbols(i, auto.assign = F, from = "2017-01-01", to = "2018-01-01")[,4])
+}
+```
+
+
+2
+```{r}
+data_pca<-princomp(data,cor = F)
+biplot(data_pca)
+screeplot(data_pca,type = "lines")
+summary(data_pca)
+```
+In the biplot, most of features,namely stocks, are primarily represented by component 1, only few stocks such as IBM and GS displays great impact by component 2.
+
+In the screeplot, component 1 explains most proportion of variance, which is 60.88%, and first 2 component combining explain 93.70% of variance. It might be enough to choose PC1 and PC2 to be important component
+
+
+3
+```{r}
+data_pca1<-princomp(data,cor = T)
+biplot(data_pca1)
+screeplot(data_pca1,type = "lines")
+summary(data_pca1)
+```
+
+4
+```{r}
+data<-as.data.frame(data)
+Return<-function(col){
+  R<-NULL
+  for (i in 2:length(col)){
+    R[i]<-(col[i]-col[i-1])/col[i-1]
+  }
+  return(R)
+}
+RE<-apply(data,2,Return)
+RE<-RE[2:length(RE[,1]),]
+return_pca<-princomp(RE,cor=T)
+biplot(return_pca)
+screeplot(return_pca,type = "lines")
+```
+
+PCA of Return doesn't like close price. It has more variances explained by component 2 or more. In the biplot we could see that many stocks have angles to PC1 and PC2, which means that they could not be primarily explained by just 1 component.
+
+If each stock were fuctuating randomly and independent of all the other stocks, they should be orthognal towards each other. Then, the eigen vectors are exact features themselves. And conducting PCA to the data change nothing, because every stock is a principal component. Hence, the screeplot should be flat and each PC explains 1/30 variances.
+
+
