@@ -1,5 +1,5 @@
 ---
-title: "HW 1"
+title: "PCA for Stock Prices"
 author: "Liangliang Huang"
 date: "2018/2/7"
 output:
